@@ -55,5 +55,13 @@ public class StringCalculatorTest {
 	public void checkExceptionUsingDelimiters() {
 		stringCalculator.add("1,2,\n3");
 	}
+	
+	/**
+	 * testDefaultDelimiterChange method checks sum of two numbers with comma and newline delimiter.
+	 */
+	@Test
+	public void testDefaultDelimiterChange() {
+		assertEquals(stringCalculator.add("//;\n1;2"), 3);
+	}
 
 }

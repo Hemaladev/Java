@@ -15,7 +15,8 @@ public class StringCalculator {
 
 	private int calculateSum(String numbers) {
 		AtomicInteger sum = new AtomicInteger();
-		List<String> numberList = Arrays.asList(numbers.split(","));
+		List<String> numberList = Arrays.asList(numbers.split(",|\\\n"));
+		System.out.println(numberList);
 		numberList.stream().forEach(number -> sum.addAndGet(Integer.parseInt(number)));
 		return sum.get();
 	}

@@ -10,6 +10,13 @@ import org.springframework.util.CollectionUtils;
 
 public class StringCalculator {
 
+	/**
+	 * add is used to add numbers extracted from string input.
+	 * 
+	 * @param numbers
+	 * @return sum
+	 * @throws Exception
+	 */
 	public int add(String numbers) throws Exception {
 		if (numbers == null || numbers.isEmpty()) {
 			return 0;
@@ -17,15 +24,18 @@ public class StringCalculator {
 		return calculateSum(numbers);
 	}
 
+	/**
+	 * calculateSum method is used to calculate sum.
+	 * 
+	 * @param numbers
+	 * @return sum
+	 * @throws Exception
+	 */
 	private int calculateSum(String numbers) throws Exception {
 		AtomicInteger sum = new AtomicInteger();
-		String delimiter = ",|\\\n";
+		String delimiter = getDelimiter(numbers);
 		if (numbers.startsWith("//")) {
-			int index = numbers.indexOf("\n");
-			if (index != -1) {
-				delimiter = numbers.substring(2, index);
-				numbers = numbers.substring(index + 1);
-			}
+			numbers = numbers.substring(numbers.indexOf("\n") + 1);
 		}
 		List<Integer> numberList = Arrays.asList(numbers.split(delimiter)).stream().map(Integer::parseInt)
 				.collect(Collectors.toList());
@@ -42,6 +52,73 @@ public class StringCalculator {
 			throw new Exception("Negatives not allowed - " + negativeValues);
 		}
 		return sum.get();
+	}
+
+	/**
+	 * getDelimiter method is used to get the delimiters.
+	 * 
+	 * @param numbers
+	 * @return delimiter
+	 */
+	private String getDelimiter(String numbers) {
+		if (numbers.startsWith("//")) {
+			int index = numbers.indexOf("\n");
+			if (index != -1) {
+				String delimiter = "";
+				String extractedDelimiterString = numbers.substring(2, index);
+				delimiter = extractedDelimiterString.contains("[")
+						? getDelimiterListFromString(extractedDelimiterString, delimiter)
+						: extractedDelimiterString;
+				StringBuilder strBuilder = getSpecialCharacterTokenizer(delimiter);
+				numbers = numbers.substring(index + 1);
+				return strBuilder.toString();
+			}
+		}
+		return ",|\\\n";
+	}
+
+	/**
+	 * getSpecialCharacterTokenizer method is used to append backslash for specila
+	 * characters
+	 * 
+	 * @param delimiter
+	 * @return strBuilder
+	 */
+	private StringBuilder getSpecialCharacterTokenizer(String delimiter) {
+		StringBuilder strBuilder = new StringBuilder();
+		for (int i = 0; i < delimiter.length(); i++) {
+			if (delimiter.charAt(i) == '*') {
+				strBuilder.append("\\*");
+			} else if (delimiter.charAt(i) == '$') {
+				strBuilder.append("\\$");
+			} else if (delimiter.charAt(i) == '+') {
+				strBuilder.append("\\+");
+			} else if (delimiter.charAt(i) == '^') {
+				strBuilder.append("\\^");
+			} else {
+				strBuilder.append(delimiter.charAt(i));
+			}
+		}
+		return strBuilder;
+	}
+
+	/**
+	 * getDelimiterListFromString method is used to get delimiters from input
+	 * string.
+	 * 
+	 * @param delimiterString
+	 * @param delimiter
+	 * @return delimiter
+	 */
+	private String getDelimiterListFromString(String delimiterString, String delimiter) {
+		if (delimiterString.contains("[") && !delimiter.isEmpty()) {
+			delimiter += '|';
+		}
+		if (delimiterString.contains("[")) {
+			delimiter += delimiterString.substring(delimiterString.indexOf("[") + 1, delimiterString.indexOf("]"));
+			return getDelimiterListFromString(delimiterString.substring(delimiterString.indexOf("]") + 1), delimiter);
+		}
+		return delimiter;
 	}
 
 }

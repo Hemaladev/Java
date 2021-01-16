@@ -80,5 +80,37 @@ public class StringCalculatorTest {
 	public void ignoreNumbersGreaterThan1000() throws Exception  {
 		assertEquals(stringCalculator.add("1,1000,4"), 5);
 	}
-
+	
+	/**
+	 * ignoreNumbersGreaterThan1000 checks when delimiter length is greater than one.
+	 */
+	@Test
+	public void checkDelimiterLengthGreaterThanOne() throws Exception  {
+		assertEquals(stringCalculator.add("//[***]\n1***2***2***1***6"), 12);
+	}
+	
+	/**
+	 * checkMultipleDelimiter_01 checks with multiple delimiters.
+	 */
+	@Test
+	public void checkMultipleDelimiter_01() throws Exception  {
+		assertEquals(stringCalculator.add("//[***][$$]\n1***2$$2***1***6"), 12);
+	}
+	
+	/**
+	 * checkMultipleDelimiter_02 checks with multiple delimiters.
+	 */
+	@Test
+	public void checkMultipleDelimiter_02() throws Exception  {
+		assertEquals(stringCalculator.add("//[*][%]\n1*2%3"), 6);
+	}
+	
+	/**
+	 * checkMultipleDelimiter_03 checks with multiple delimiters.
+	 */
+	@Test
+	public void checkMultipleDelimiter_03() throws Exception  {
+		assertEquals(stringCalculator.add("//[*][%][!][@][#][$][^][&][~]\n1*2%3!4@5#6$7^8&9~10"), 55);
+	}
+	
 }

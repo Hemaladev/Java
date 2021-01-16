@@ -90,26 +90,12 @@ public class StringCalculatorTest {
 	}
 	
 	/**
-	 * checkMultipleDelimiter_01 checks with multiple delimiters.
+	 * checkMultipleDelimiter checks with multiple delimiters.
 	 */
 	@Test
-	public void checkMultipleDelimiter_01() throws Exception  {
+	public void checkMultipleDelimiter() throws Exception  {
 		assertEquals(stringCalculator.add("//[***][$$]\n1***2$$2***1***6"), 12);
-	}
-	
-	/**
-	 * checkMultipleDelimiter_02 checks with multiple delimiters.
-	 */
-	@Test
-	public void checkMultipleDelimiter_02() throws Exception  {
 		assertEquals(stringCalculator.add("//[*][%]\n1*2%3"), 6);
-	}
-	
-	/**
-	 * checkMultipleDelimiter_03 checks with multiple delimiters.
-	 */
-	@Test
-	public void checkMultipleDelimiter_03() throws Exception  {
 		assertEquals(stringCalculator.add("//[*][%][!][@][#][$][^][&][~]\n1*2%3!4@5#6$7^8&9~10"), 55);
 	}
 	

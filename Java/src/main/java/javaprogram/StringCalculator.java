@@ -18,10 +18,7 @@ public class StringCalculator {
 	 * @throws Exception
 	 */
 	public int add(String numbers) throws Exception {
-		if (numbers == null || numbers.isEmpty()) {
-			return 0;
-		}
-		return calculateSum(numbers);
+		return (numbers == null || numbers.isEmpty()) ? 0 : calculateSum(numbers);
 	}
 
 	/**
@@ -39,6 +36,18 @@ public class StringCalculator {
 		}
 		List<Integer> numberList = Arrays.asList(numbers.split(delimiter)).stream().map(Integer::parseInt)
 				.collect(Collectors.toList());
+		checkInvalidNumbers(sum, numberList);
+		return sum.get();
+	}
+
+	/**
+	 * checkInvalidNumbers checks invalid number and calculates sum.
+	 * 
+	 * @param sum
+	 * @param numberList
+	 * @throws Exception
+	 */
+	private void checkInvalidNumbers(AtomicInteger sum, List<Integer> numberList) throws Exception {
 		List<Integer> negativeValues = new ArrayList<>();
 		numberList.stream().filter(number -> number < 1000).forEach(number -> {
 			if (number < 0) {
@@ -51,7 +60,6 @@ public class StringCalculator {
 			System.out.println("Negatives not allowed - " + negativeValues);
 			throw new Exception("Negatives not allowed - " + negativeValues);
 		}
-		return sum.get();
 	}
 
 	/**
@@ -61,18 +69,15 @@ public class StringCalculator {
 	 * @return delimiter
 	 */
 	private String getDelimiter(String numbers) {
-		if (numbers.startsWith("//")) {
-			int index = numbers.indexOf("\n");
-			if (index != -1) {
-				String delimiter = "";
-				String extractedDelimiterString = numbers.substring(2, index);
-				delimiter = extractedDelimiterString.contains("[")
-						? getDelimiterListFromString(extractedDelimiterString, delimiter)
-						: extractedDelimiterString;
-				StringBuilder strBuilder = getSpecialCharacterTokenizer(delimiter);
-				numbers = numbers.substring(index + 1);
-				return strBuilder.toString();
-			}
+		int index = numbers.indexOf("\n");
+		if (numbers.startsWith("//") && index != -1) {
+			String delimiter = "";
+			String extractedDelimiterString = numbers.substring(2, index);
+			delimiter = extractedDelimiterString.contains("[")
+					? getDelimiterListFromString(extractedDelimiterString, delimiter)
+					: extractedDelimiterString;
+			StringBuilder strBuilder = getSpecialCharacterTokenizer(delimiter);
+			return strBuilder.toString();
 		}
 		return ",|\\\n";
 	}
